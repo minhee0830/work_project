@@ -55,26 +55,8 @@ def download_file(filename):
 
 @app.route('/image-generate', methods=['GET','POST'])
 def image_generate():
-    image_url = None
-    if request.method == 'POST':
-        prompt = request.form['prompt'].strip()
-        prompt_en = GoogleTranslator(source='auto', target='en').translate(prompt)
-        try:
-            resp = openai.Image.create(
-                model='dall-e-3', prompt=prompt_en,
-                size='1024x1024', n=1, response_format='url'
-            )
-            url = resp['data'][0]['url']
-            data = requests.get(url).content
-            filename = f"generated_{uuid.uuid4()}.png"
-            path = os.path.join('static/generated_images', filename)
-            with open(path, 'wb') as out:
-                out.write(data)
-            image_url = url_for('static', filename=f'generated_images/{filename}')
-        except Exception as e:
-            print('에러 발생:', e)
-    return render_template('image_generate.html', image_url=image_url)
-
+    ...
+    
 @app.route('/image-resize', methods=['GET','POST'])
 def image_resize():
     resized_url = None
