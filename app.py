@@ -91,7 +91,7 @@ def image_resize():
                 resized_url = url_for('static', filename=f'resized_images/{out_name}')
     return render_template('image_resize.html', resized_url=resized_url, upscaled_url=upscaled_url)
 
-# 배경 제거 (고급 모드 선택 가능)
+
 @app.route('/remove-bg', methods=['GET', 'POST'])
 def remove_bg():
     removed_url = None
@@ -102,31 +102,37 @@ def remove_bg():
 
         if image:
             input_data = image.read()
-            if high_quality_option:
-                # 고급 모드: 1차 remove → 필터 → 2차 remove
-                original = Image.open(io.BytesIO(input_data)).convert("RGBA")
-                step1 = remove(original)
-                step1_image = Image.open(io.BytesIO(step1)).convert("RGBA")
-                step2 = step1_image.filter(ImageFilter.EDGE_ENHANCE)
-                step3 = remove(step2)
-                result_image = Image.open(io.BytesIO(step3)).convert("RGBA")
-            else:
-                # 기본 모드
-                result = remove(input_data)
-                result_image = Image.open(io.BytesIO(result)).convert("RGBA")
+            try:
+                if high_quality_option:
+                    # 고급 모드: 1차 remove → 필터 → 2차 remove
+                    original = Image.open(io.BytesIO(input_data)).convert("RGBA")
+                    step1 = remove(original)
+                    step1_image = Image.open(io.BytesIO(step1)).convert("RGBA")
+                    step2 = step1_image.filter(ImageFilter.EDGE_ENHANCE)
+                    buffered = io.BytesIO()
+                    step2.save(buffered, format="PNG")
+                    step2_bytes = buffered.getvalue()
+                    step3 = remove(step2_bytes)
+                    result_image = Image.open(io.BytesIO(step3)).convert("RGBA")
+                else:
+                    # 기본 모드
+                    result = remove(input_data)
+                    result_image = Image.open(io.BytesIO(result)).convert("RGBA")
 
-            if white_bg_option:
-                white_bg = Image.new("RGBA", result_image.size, (255, 255, 255, 255))
-                result_image = Image.alpha_composite(white_bg, result_image)
+                if white_bg_option:
+                    white_bg = Image.new("RGBA", result_image.size, (255, 255, 255, 255))
+                    result_image = Image.alpha_composite(white_bg, result_image)
 
-            filename = f"removed_{uuid.uuid4()}.png"
-            save_path = os.path.join("static/removed_bg", filename)
-            result_image.save(save_path)
-            removed_url = url_for('static', filename=f'removed_bg/{filename}')
+                filename = f"removed_{uuid.uuid4()}.png"
+                save_path = os.path.join("static/removed_bg", filename)
+                result_image.save(save_path)
+                removed_url = url_for('static', filename=f'removed_bg/{filename}')
+            except Exception as e:
+                print("고급모드 처리 중 오류 발생:", e)
 
     return render_template('remove_bg.html', removed_url=removed_url)
 
-# 이미지 포맷 변환
+
 @app.route('/convert-format', methods=['GET', 'POST'])
 def convert_format():
     converted_url = None
@@ -140,6 +146,7 @@ def convert_format():
             im.save(path, format=format.upper())
             converted_url = url_for('static', filename=f'resized_images/{filename}')
     return render_template('convert_format.html', converted_url=converted_url)
+
 
 # 홈
 @app.route('/')

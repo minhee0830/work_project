@@ -1,35 +1,80 @@
-<!-- templates/remove_bg.html -->
-<div class="container mt-4">
-    <h2>🖼️ 이미지 배경 제거</h2>
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>이미지 배경 제거</title>
+    <style>
+        body {
+            font-family: "Apple SD Gothic Neo", sans-serif;
+            max-width: 600px;
+            margin: 40px auto;
+            padding: 20px;
+            background-color: #fdfdfd;
+            border: 1px solid #ddd;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+        }
+        h1 {
+            font-size: 24px;
+            text-align: center;
+            margin-bottom: 24px;
+            color: #333;
+        }
+        label {
+            display: block;
+            margin: 15px 0 5px;
+            font-weight: bold;
+        }
+        input[type="file"] {
+            margin-bottom: 10px;
+        }
+        .checkbox-group {
+            margin: 10px 0;
+        }
+        button {
+            margin-top: 15px;
+            padding: 10px 18px;
+            background-color: #4CAF50;
+            border: none;
+            color: white;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .preview {
+            margin-top: 30px;
+            text-align: center;
+        }
+        .preview img {
+            max-width: 100%;
+            border-radius: 10px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+    <h1>🖼 이미지 배경 제거</h1>
     <form method="POST" enctype="multipart/form-data">
-      <div class="mb-3">
-        <label for="image" class="form-label">이미지를 업로드하세요:</label>
-        <input class="form-control" type="file" name="image" required>
-      </div>
-  
-      <div class="form-check">
-        <input class="form-check-input" type="checkbox" name="white_bg" value="yes" id="white_bg">
-        <label class="form-check-label" for="white_bg">
-          배경을 흰색으로 설정하기
-        </label>
-      </div>
-  
-      <div class="form-check">
-        <input class="form-check-input" type="checkbox" name="high_quality" value="yes" id="high_quality">
-        <label class="form-check-label" for="high_quality">
-          고급모드로 누끼 따기 (경계 강화 필터 적용)
-        </label>
-      </div>
-  
-      <button type="submit" class="btn btn-primary mt-3">변환하기</button>
+        <label for="image">이미지를 업로드하세요:</label>
+        <input type="file" name="image" required>
+
+        <div class="checkbox-group">
+            <label><input type="checkbox" name="white_bg"> 배경을 흰색으로 설정하기</label>
+            <label><input type="checkbox" name="high_quality"> 고급모드로 누끼 따기 (경계 강화 필터 적용)</label>
+        </div>
+
+        <button type="submit">변환하기</button>
     </form>
-  
+
     {% if removed_url %}
-    <div class="mt-4">
-      <h5>결과:</h5>
-      <img src="{{ removed_url }}" class="img-fluid" alt="결과 이미지 미리보기">
-      <a href="{{ removed_url }}" class="btn btn-success mt-2" download>📥 다운로드</a>
-    </div>
+        <div class="preview">
+            <h2>✅ 변환된 이미지</h2>
+            <img src="{{ removed_url }}" alt="변환 결과 이미지">
+            <p><a href="{{ removed_url }}" download>이미지 다운로드</a></p>
+        </div>
     {% endif %}
-  </div>
-  
+</body>
+</html>
