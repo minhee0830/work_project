@@ -1,0 +1,10 @@
+Flask
+openai
+deep-translator
+requests
+uuid
+Pillow
+PyPDF2
+werkzeug
+replicate
+rembg
