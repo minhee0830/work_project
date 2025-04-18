@@ -2,4 +2,7 @@
 venv/
 __pycache__/
 *.pyc
-
+static/generated_images/
+static/resized_images/
+static/removed_bg/
+merged_pdfs/
