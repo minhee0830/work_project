@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block title %}이미지 생성{% endblock %}
+
+{% block content %}
+<h2>🎨 AI 이미지 생성</h2>
+<p>원하는 이미지를 텍스트로 설명해보세요! 한글도 OK 👌</p>
+
+<form method="POST">
+  <div class="mb-3">
+    <label for="prompt" class="form-label">설명:</label>
+    <input type="text" class="form-control" id="prompt" name="prompt" required>
+  </div>
+  <button type="submit" class="btn btn-primary">이미지 생성</button>
+</form>
+
+{% if image_url %}
+  <div class="mt-4">
+    <p>✅ 생성된 이미지:</p>
+    <img src="{{ image_url }}" alt="Generated Image" class="img-fluid" style="max-width: 512px;">
+    <br><br>
+    <a href="{{ image_url }}" download class="btn btn-success">📥 이미지 다운로드</a>
+  </div>
+{% endif %}
+{% endblock %}

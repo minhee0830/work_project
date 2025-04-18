@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block title %}이미지 리사이즈 & AI 확장{% endblock %}
+{% block content %}
+<div class="container mt-5">
+  <h2 class="mb-4">🖼 이미지 리사이즈 & AI 배경 확장</h2>
+  <form method="POST" enctype="multipart/form-data">
+    <div class="mb-3">
+      <label class="form-label">이미지 업로드</label>
+      <input type="file" name="image" accept="image/*" required class="form-control" />
+    </div>
+    <div class="row">
+      <div class="col">
+        <input type="number" class="form-control" name="width" placeholder="가로(px)" required />
+      </div>
+      <div class="col">
+        <input type="number" class="form-control" name="height" placeholder="세로(px)" required />
+      </div>
+    </div>
+    <div class="form-check mt-2">
+      <input class="form-check-input" type="checkbox" value="yes" name="compress" id="compress">
+      <label class="form-check-label" for="compress">
+        🗜 사진 크기 압축하기 (WEBP 저장)
+      </label>
+    </div>
+    <div class="form-check">
+      <input class="form-check-input" type="checkbox" value="yes" name="outpaint" id="outpaint">
+      <label class="form-check-label" for="outpaint">
+        🌄 AI 배경 자연 확장 사용
+      </label>
+    </div>
+    <button type="submit" class="btn btn-primary mt-3">✨ 변환하기</button>
+  </form>
+  
+  
+
+{% if resized_url %}
+  <h5 class="mt-4">🎯 리사이즈 결과</h5>
+  <img src="{{ resized_url }}" class="img-fluid border rounded" style="max-width: 300px;">
+  <br>
+  <a href="{{ resized_url }}" download class="btn btn-success mt-2">📥 다운로드</a>
+{% endif %}
+
+{% if upscaled_url %}
+  <h5 class="mt-4">🌸 AI 배경 확장 결과</h5>
+  <img src="{{ upscaled_url }}" class="img-fluid border rounded" style="max-width: 300px;">
+  <br>
+  <a href="{{ upscaled_url }}" download class="btn btn-primary mt-2">📥 다운로드</a>
+{% endif %}
+
+</div>
+{% endblock %}

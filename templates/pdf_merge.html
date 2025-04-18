@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+{% block title %}PDF 합치기{% endblock %}
+
+{% block content %}
+<h2>📎 PDF 합치기</h2>
+<p>파일을 추가하고 순서를 드래그로 조정해보세요!</p>
+
+<form id="pdf-form" action="/pdf" method="POST" enctype="multipart/form-data">
+  <input type="file" id="pdf-input" multiple accept=".pdf" hidden>
+  <button type="button" class="btn btn-secondary" onclick="document.getElementById('pdf-input').click()">📂 파일 선택</button>
+
+  <ul id="file-list" class="list-group my-3"></ul>
+  <div class="mb-3">
+    <label for="filename" class="form-label">저장할 파일명 (확장자 .pdf 제외)</label>
+    <input type="text" class="form-control" id="filename" name="filename" placeholder="예: my_merged_file" required>
+  </div>
+  <button type="submit" class="btn btn-primary">📎 합치기</button>
+</form>
+
+{% if merged_file_url %}
+  <div class="mt-4">
+    <p>✅ 합쳐진 PDF 파일을 다운로드하세요:</p>
+    <a href="{{ merged_file_url }}" class="btn btn-success" download>📥 다운로드</a>
+  </div>
+{% endif %}
+
+<style>
+  #file-list li {
+    cursor: grab;
+  }
+</style>
+
+<script>
+let fileInput = document.getElementById('pdf-input');
+let fileList = document.getElementById('file-list');
+let form = document.getElementById('pdf-form');
+let files = [];
+
+fileInput.addEventListener('change', (e) => {
+  files = Array.from(e.target.files);
+  renderFileList();
+});
+
+function renderFileList() {
+  fileList.innerHTML = '';
+  files.forEach((file, index) => {
+    const li = document.createElement('li');
+    li.className = 'list-group-item';
+    li.textContent = file.name;
+    li.draggable = true;
+    li.dataset.index = index;
+
+    li.addEventListener('dragstart', (e) => {
+      e.dataTransfer.setData('text/plain', index);
+    });
+
+    li.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      li.style.background = '#e9ecef';
+    });
+
+    li.addEventListener('dragleave', () => {
+      li.style.background = '';
+    });
+
+    li.addEventListener('drop', (e) => {
+      e.preventDefault();
+      let from = parseInt(e.dataTransfer.getData('text/plain'));
+      let to = parseInt(li.dataset.index);
+      [files[from], files[to]] = [files[to], files[from]];
+      renderFileList();
+    });
+
+    fileList.appendChild(li);
+  });
+}
+
+// 폼 제출 시 순서 유지해서 FormData로 전송
+form.addEventListener('submit', (e) => {
+  e.preventDefault();
+  const formData = new FormData();
+  files.forEach(f => formData.append('pdfs', f));
+
+  const filename = document.getElementById('filename').value.trim();
+  formData.append('filename', filename);
+
+  fetch('/pdf', {
+    method: 'POST',
+    body: formData
+  }).then(res => res.text()).then(html => {
+    document.body.innerHTML = html;
+  });
+});
+</script>
+
+{% endblock %}

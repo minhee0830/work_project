@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% block title %}이미지 확장자 변경{% endblock %}
+{% block content %}
+<div class="container mt-5">
+  <h2 class="mb-4">🖼️ 이미지 확장자 변경</h2>
+  <form method="POST" enctype="multipart/form-data" class="border rounded p-4 shadow-sm bg-white">
+    <div class="mb-3">
+      <label class="form-label">이미지를 업로드하세요:</label>
+      <input type="file" name="image" accept="image/*" required class="form-control">
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">변환할 확장자 선택:</label>
+      <select name="format" class="form-select" required>
+        <option value="jpeg">JPEG</option>
+        <option value="png">PNG</option>
+        <option value="webp">WEBP</option>
+        <option value="bmp">BMP</option>
+      </select>
+    </div>
+
+    <button type="submit" class="btn btn-primary w-100">🔁 변환하기</button>
+  </form>
+
+  {% if converted_url %}
+  <div class="alert alert-success mt-4">
+    ✅ 변환이 완료되었습니다!
+  </div>
+  <div class="text-center">
+    <a href="{{ converted_url }}" class="btn btn-success" download>📥 이미지 다운로드</a>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}
+
+
+  
