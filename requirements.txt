@@ -1,13 +1,14 @@
 Flask
+gunicorn
 openai
-deep-translator
-requests
-uuid
+deep_translator
 Pillow
 PyPDF2
 werkzeug
-replicate
+requests
+uuid
 rembg
 onnxruntime
-gunicorn
+replicate
+
 
