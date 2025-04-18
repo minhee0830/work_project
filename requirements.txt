@@ -9,4 +9,5 @@ werkzeug
 replicate
 rembg
 onnxruntime
+gunicorn
 
