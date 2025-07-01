@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>카카오쇼핑 HTML 생성기</title>
+</head>
+<body>
+  <h1>카카오쇼핑 HTML 코드 생성기</h1>
+  <form method="post">
+    <textarea name="source_html" rows="10" cols="80" placeholder="여기에 HTML 소스를 붙여넣으세요"></textarea><br>
+    <input type="text" name="rules" placeholder="매칭 규칙 (예: 2-6, 3-7, 4-8)"><br>
+    <button type="submit">코드 생성</button>
+  </form>
+  {% if generated_html %}
+    <h2>생성된 코드</h2>
+    <textarea rows="10" cols="80">{{ generated_html }}</textarea>
+  {% endif %}
+</body>
+</html>
